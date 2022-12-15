@@ -1,8 +1,5 @@
-import Head from "next/head";
-import Image from "next/image";
 import Router from "next/router";
 import { useState, useEffect } from "react";
-import styles from "../styles/Home.module.css";
 import fetch from "node-fetch";
 import axios from "axios";
 const WBK = require("wikibase-sdk");
