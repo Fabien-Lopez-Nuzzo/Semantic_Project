@@ -66,7 +66,7 @@ export default function Info() {
   const getIngredients = (item) => {
     let ingredients = [];
     for (let i = 1; i <= 15 && item["strIngredient" + i] != null; i++)
-      ingredients.push(item["strIngredient" + i]);
+      ingredients.push([item["strIngredient" + i], item["strMeasure" + i].trim()]);
     return ingredients;
   };
 
@@ -81,11 +81,12 @@ export default function Info() {
             data["data"]["drinks"]?.map((item, _idx) => {
               return (
                 <>
-                  <h2 style={{fontWeight: "bold"}}>Ingredients:&nbsp;</h2><br />
+                  <h1 style={{fontWeight: "bold"}}>{item["strDrink"]}&nbsp;</h1>
+                  <h2 style={{fontWeight: "bold"}}>Ingredients:&nbsp;</h2>
                   { getIngredients(item) != undefined &&
                     getIngredients(item)?.map((ingred, _idx) => {
                       return (
-                        <p>{ingred}&nbsp;</p>
+                        <p>{ingred[0]} ({ingred[1]}),&nbsp;</p>
                       );
                     })
                   }
