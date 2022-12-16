@@ -1,12 +1,10 @@
-import Head from "next/head";
 import Image from "next/image";
+import logo from '../public/logo.png'
 import Router from "next/router";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import styles from "../styles/Home.module.css";
-import fetch from "node-fetch";
 import axios from "axios";
 const WBK = require("wikibase-sdk");
 const wbk = WBK({
@@ -62,7 +60,7 @@ export default function Home() {
       if (idx != -1) {
         router.push({ pathname: "/info", query: { name: allDrinks[idx][1] } });
       } else {
-        notifyError("This cocktail not exist");
+        notifyError("This cocktail does not exist");
       }
     }
     // const url = wbk.cirrusSearchPages({ search: "mojito" });
@@ -111,9 +109,11 @@ export default function Home() {
     // console.log(test);
   };
   return (
-    <div className="h-full w-full relative min-h-screen text-white bg-gray-600">
+    <div className="h-full w-full relative min-h-screen text-black bg-gray-600">
       <div className="h-full min-h-screen w-full flex flex-col">
         <div className="w-full flex flex-col items-center">
+          <Image src={logo} alt="wimc logo" style={{marginTop: "1rem"}} />
+          <hr style={{color: "#000000"}} />
           <div className="w-2/3 flex justify-center items-center mt-10 text-4xl font-bold pb-10 ">
             <input
               type="text"
@@ -124,8 +124,8 @@ export default function Home() {
               onKeyUp={(e) => searchWiki(e)}
             />
           </div>
-          <div className="w-4/5 h-[550px] flex justify-center items-center my-10">
-            <div className="grid grid-cols-4 w-4/5 mt-10 gap-8 justify-around mb-10">
+          <div className="w-9/10 h-[550px] flex justify-center items-center my-10">
+            <div className="grid grid-cols-4 mt-10 gap-8 justify-around mb-10">
               {cocktailSearch &&
                 cocktailSearch?.map((search, index) => {
                   return (
@@ -136,22 +136,25 @@ export default function Home() {
                         scale: 1.05,
                       }}
                       onClick={() => {
-                        setModalMovie(search);
-                        openModal();
+                        // setModalMovie(search);
+                        // openModal();
+                        setSearch(search?.drinks[0].strDrink);
+                        // searchWiki(0, "Clicked");
                       }}
                     >
-                      <div className="h-[200px] w-full flex justify-center ">
+                      <div className="h-[200px] w-full flex justify-center">
                         <Image
                           src={search?.drinks[0].strDrinkThumb}
                           height="350"
                           width="175"
                           // quality="100"
+                          // onClick={() => searchWiki({key: "Enter"})}
                         />
                       </div>
-                      <div className="h-[75px] w-full flex flex-col justify-around items-center text-white text-center ">
+                      <div className="h-[64px] w-full flex flex-col justify-around items-center text-white text-center ">
                         <div className="flex flex-col justify-center items-center">
                           <p>{search?.drinks[0].strDrink}</p>
-                          <p>{search?.drinks[0].strAlcoholic}</p>
+                          <p style={{fontSize: 12}}>- {search?.drinks[0].strAlcoholic} -</p>
                         </div>
                       </div>
                     </motion.div>
