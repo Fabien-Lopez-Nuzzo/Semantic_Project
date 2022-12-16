@@ -15,49 +15,30 @@ const wbk = WBK({
 export default function Home() {
   const router = Router;
   const [search, setSearch] = useState("");
-  const [allDrinks, setAllDrinks] = useState([]);
   const notifyError = (props) => toast.error(props);
   const [cocktailSearch, setCocktailSearch] = useState();
 
   useEffect(() => {
-    const getAllDrinks = async () => {
-      const tmp = [];
-      for (let index = 0; index <= 26; index++) {
-        let letter = String.fromCharCode(index + 65);
-        let allDrinks = await axios.get(
-          "https://www.thecocktaildb.com/api/json/v1/1/search.php?f=" + letter
-        );
-        allDrinks &&
-          allDrinks?.data?.drinks?.forEach((element) => {
-            tmp.push(element.strDrink.toLowerCase());
-          });
-      }
-      setAllDrinks(tmp);
-    };
-
     const getRandomDrinks = async () => {
       let tmp = [];
       for (let index = 0; index < 8; index++) {
-        let randomDrinks = await axios.get(
-          "https://www.thecocktaildb.com/api/json/v1/1/random.php"
-        );
+        let randomDrinks = await axios.get("https://www.thecocktaildb.com/api/json/v1/1/random.php");
         tmp.push(randomDrinks?.data);
       }
       setCocktailSearch(tmp);
       console.log(tmp);
     };
-    getAllDrinks();
     getRandomDrinks();
   }, []);
 
   const searchWiki = async (e, s = "") => {
     if (e.key == "Enter" || e.keycode == 13 || s != "") {
       console.log("bing chilling! \'" + search + "\'")
-      if (allDrinks.includes(search.toLowerCase())) {
+      let res = await axios.get("https://www.thecocktaildb.com/api/json/v1/1/search.php?s=" + search);
+      if (res.data.drinks)
         router.push({ pathname: "/info", query: { name: search } });
-      } else {
+      else
         notifyError("This cocktail does not exist");
-      }
     }
     // const url = wbk.cirrusSearchPages({ search: "mojito" });
     // fetch(url)
@@ -106,7 +87,7 @@ export default function Home() {
   };
 
   return (
-    <div className="h-full w-full relative min-h-screen text-black bg-gray-600">
+    <div className="h-full w-full relative min-h-screen bg-gray-600">
       <div className="h-full min-h-screen w-full flex flex-col">
         <div className="w-full flex flex-col items-center">
           <Image src={logo} alt="wimc logo" style={{marginTop: "1rem"}} />
