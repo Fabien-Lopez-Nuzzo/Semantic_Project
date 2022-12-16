@@ -1,3 +1,5 @@
+import Image from "next/image";
+import logo from '../public/logo.png'
 import Router from "next/router";
 import { useState, useEffect } from "react";
 import fetch from "node-fetch";
@@ -10,6 +12,7 @@ const wbk = WBK({
 
 export default function Info() {
   const router = Router;
+  const [data, setData] = useState(undefined);
   useEffect(() => {
     const getInfoCocktail = async () => {
       console.log(router?.query?.name);
@@ -33,7 +36,7 @@ export default function Info() {
         .then((res) => res.json())
         // .then(wbk.parse.wb.entities)
         .then((entities) => {
-          console.log(entities);
+          // console.log(entities);
         })
         .catch((error) => console.log("error", error));
 
@@ -51,16 +54,46 @@ export default function Info() {
         .then((result) => console.log(result))
         .catch((error) => console.log("error", error));
       let test = await axios.get(
-        "https://www.thecocktaildb.com/api/json/v1/1/search.php?f=f"
+        "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=" + router?.query?.name.toString().toLowerCase()
       );
       console.log(test);
+      console.log("~~~~~~~~~~~~");
+      setData(test);
     };
     getInfoCocktail();
   }, []);
+
+  const getIngredients = (item) => {
+    let ingredients = [];
+    for (let i = 1; i <= 15 && item["strIngredient" + i] != null; i++)
+      ingredients.push(item["strIngredient" + i]);
+    return ingredients;
+  };
+
   return (
-    <div className="bg-red-200 h-screen w-full flex justify-center items-center">
-      <div className="w-1/2 h-1/2 flex justify-center items-center">
-        <div className="w-1/4"></div>
+    <div className="bg-red-200 h-full min-h-screen w-full flex flex-col">
+      <div className="w-full flex flex-col items-center">
+        <Image src={logo} alt="wimc logo" style={{marginTop: "1rem"}} />
+        <hr style={{color: "#000000"}} />
+        <div className="w-9/10 h-9/10 flex justify-center items-center">
+          <hr />
+          {data != undefined &&
+            data["data"]["drinks"]?.map((item, _idx) => {
+              return (
+                <>
+                  <h2 style={{fontWeight: "bold"}}>Ingredients:&nbsp;</h2><br />
+                  { getIngredients(item) != undefined &&
+                    getIngredients(item)?.map((ingred, _idx) => {
+                      return (
+                        <p>{ingred}&nbsp;</p>
+                      );
+                    })
+                  }
+                </>
+              );
+          })}
+          <hr />
+        </div>
       </div>
     </div>
   );

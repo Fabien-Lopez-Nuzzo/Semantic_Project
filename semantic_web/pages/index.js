@@ -104,6 +104,7 @@ export default function Home() {
     // );
     // console.log(test);
   };
+
   return (
     <div className="h-full w-full relative min-h-screen text-black bg-gray-600">
       <div className="h-full min-h-screen w-full flex flex-col">
@@ -121,7 +122,7 @@ export default function Home() {
             />
           </div>
           <div className="w-9/10 h-[550px] flex justify-center items-center my-10">
-            <div className="grid grid-cols-4 mt-10 gap-8 justify-around mb-10">
+            <div className="grid grid-cols-4 my-10 gap-8 justify-around">
               {cocktailSearch &&
                 cocktailSearch?.map((search, index) => {
                   return (
@@ -143,7 +144,6 @@ export default function Home() {
                           src={search?.drinks[0].strDrinkThumb}
                           height="350"
                           width="175"
-                          // quality="100"
                           // onClick={() => searchWiki({key: "Enter"})}
                         />
                       </div>
