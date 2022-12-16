@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "P31": "Instance of"
+    },
+    {
+        "id": 2,
+        "P279": "Subclass of"
+    },
+    {
+        "id": 3,
+        "P575": "Discover Date"
+    }
+]

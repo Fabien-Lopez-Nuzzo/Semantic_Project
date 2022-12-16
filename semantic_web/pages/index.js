@@ -31,9 +31,10 @@ export default function Home() {
         );
         allDrinks &&
           allDrinks?.data?.drinks?.forEach((element) => {
-            tmp.push(element.strDrink.toLowerCase());
+            tmp.push([element.strDrink.toLowerCase(), element.strDrink]);
           });
       }
+      // console.log(tmp);
       setAllDrinks(tmp);
     };
 
@@ -46,7 +47,7 @@ export default function Home() {
         tmp.push(randomDrinks?.data);
       }
       setCocktailSearch(tmp);
-      console.log(tmp);
+      // console.log(tmp);
     };
     getAllDrinks();
     getRandomDrinks();
@@ -54,8 +55,12 @@ export default function Home() {
 
   const searchWiki = async (e) => {
     if (e.key == "Enter" || e.keycode == 13) {
-      if (allDrinks.includes(search.toLowerCase())) {
-        router.push({ pathname: "/info", query: { name: search } });
+      var idx = -1;
+      allDrinks.forEach(function callback(value, index) {
+        if (value[0] == search.toLowerCase()) idx = index;
+      });
+      if (idx != -1) {
+        router.push({ pathname: "/info", query: { name: allDrinks[idx][1] } });
       } else {
         notifyError("This cocktail not exist");
       }
