@@ -10,6 +10,8 @@ const wbk = WBK({
   sparqlEndpoint: "https://query.my-wikibase-instan.se/sparql", // Required to use `sparqlQuery` and `getReverseClaims` functions, optional otherwise
 });
 
+function capitalizeFirstLetter(string) { return string[0].toUpperCase() + string.slice(1);}
+
 export default function Info() {
   const router = Router;
   const [data, setData] = useState(undefined);
@@ -66,34 +68,36 @@ export default function Info() {
   const getIngredients = (item) => {
     let ingredients = [];
     for (let i = 1; i <= 15 && item["strIngredient" + i] != null; i++)
-      ingredients.push([item["strIngredient" + i], item["strMeasure" + i].trim()]);
+      ingredients.push([item["strIngredient" + i], capitalizeFirstLetter(item["strMeasure" + i].trim())]);
     return ingredients;
   };
 
   return (
-    <div className="bg-red-200 h-full min-h-screen w-full flex flex-col">
-      <div className="w-full flex flex-col items-center">
-        <Image src={logo} alt="wimc logo" style={{marginTop: "1rem"}} />
-        <hr style={{color: "#000000"}} />
-        <div className="w-9/10 h-9/10 flex justify-center items-center">
+    <div className="bg-red-200 h-full min-h-screen w-full">
+      <div className="w-full items-center flex flex-col">
+        <center><Image src={logo} alt="wimc logo" style={{marginTop: "1rem"}} /></center>
+        {/* <hr style={{color: "#000000"}} /> */}
+        <div className="w-9/10 h-9/10 justify-center items-center">
           <hr />
           {data != undefined &&
             data["data"]["drinks"]?.map((item, _idx) => {
               return (
                 <>
-                  <h1 style={{fontWeight: "bold"}}>{item["strDrink"]}&nbsp;</h1>
-                  <h2 style={{fontWeight: "bold"}}>Ingredients:&nbsp;</h2>
+                  <h1 style={{fontWeight: "bold", fontSize: "32px"}}>{item["strDrink"]}</h1>
+                  <h2 style={{fontWeight: "bold", fontSize: "18px"}}>Ingredients:</h2>
                   { getIngredients(item) != undefined &&
                     getIngredients(item)?.map((ingred, _idx) => {
                       return (
-                        <p>{ingred[0]} ({ingred[1]}),&nbsp;</p>
+                        <>
+                          <p>{ingred[0]} <i>({ingred[1]})</i></p>
+                        </>
                       );
                     })
                   }
+                  <hr />
                 </>
               );
           })}
-          <hr />
         </div>
       </div>
     </div>
