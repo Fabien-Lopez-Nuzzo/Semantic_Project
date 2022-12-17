@@ -1,5 +1,5 @@
 import Image from "next/image";
-import logo from '../public/logo.png'
+import logo from "../public/logo.png";
 import Router from "next/router";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
@@ -19,6 +19,10 @@ export default function Home() {
   const notifyError = (props) => toast.error(props);
   const [cocktailSearch, setCocktailSearch] = useState();
 
+  function getRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
   useEffect(() => {
     const getAllDrinks = async () => {
       const tmp = [];
@@ -32,12 +36,12 @@ export default function Home() {
             tmp.push([element.strDrink.toLowerCase(), element.strDrink]);
           });
       }
-      // console.log(tmp);
       setAllDrinks(tmp);
     };
 
     const getRandomDrinks = async () => {
       let tmp = [];
+      // let nb = getRandomArbitrary
       for (let index = 0; index < 8; index++) {
         let randomDrinks = await axios.get(
           "https://www.thecocktaildb.com/api/json/v1/1/random.php"
@@ -63,57 +67,13 @@ export default function Home() {
         notifyError("This cocktail does not exist");
       }
     }
-    // const url = wbk.cirrusSearchPages({ search: "mojito" });
-    // fetch(url)
-    //   .then((res) => res.json())
-    //   .then(wbk.parse.wb.pagesTitles)
-    //   .then((titles) => {
-    //     // If you where searching in an entity namespace, which is the default namespace on Wikibase instances,
-    //     // those titles are either entities ids (ex: Q1) or prefixed entities ids (ex: Item:Q1)
-    //     // In the first case, we can just do
-    //     const ids = titles;
-    //     // In the second case, to get the ids, we need to drop the prefix
-    //     // const ids = titles.map((title) => title.split(":")[1]);
-    //     // From there, to get the full entities data, you could do
-    //     const entitiesUrl = wbk.getEntities({ ids });
-    //     return fetch(entitiesUrl);
-    //   })
-    //   .then((res) => res.json())
-    //   // .then(wbk.parse.wb.entities)
-    //   .then((entities) => {
-    //     console.log(entities);
-    //   })
-    //   .catch((error) => console.log("error", error));
-    // var myHeaders = new Headers();
-    // myHeaders.append("Content-Type", "text/plain");
-    // myHeaders.append(
-    //   "Cookie",
-    //   "GeoIP=SE:F:J__nk__ping:57.80:14.14:v4; WMF-Last-Access-Global=13-Dec-2022; WMF-Last-Access=13-Dec-2022"
-    // );
-    // var requestOptions = {
-    //   method: "GET",
-    //   headers: myHeaders,
-    //   // body: raw,
-    //   redirect: "follow",
-    // };
-    // fetch(
-    //   "https://www.wikidata.org/w/api.php?action=wbgetentities&props=labels&ids=Q2536409&languages=en",
-    //   requestOptions
-    // )
-    //   .then((response) => response.text())
-    //   .then((result) => console.log(result))
-    //   .catch((error) => console.log("error", error));
-    // let test = await axios.get(
-    //   "https://www.thecocktaildb.com/api/json/v1/1/search.php?f=f"
-    // );
-    // console.log(test);
   };
   return (
     <div className="h-full w-full relative min-h-screen text-black bg-gray-600">
       <div className="h-full min-h-screen w-full flex flex-col">
         <div className="w-full flex flex-col items-center">
-          <Image src={logo} alt="wimc logo" style={{marginTop: "1rem"}} />
-          <hr style={{color: "#000000"}} />
+          <Image src={logo} alt="wimc logo" style={{ marginTop: "1rem" }} />
+          <hr style={{ color: "#000000" }} />
           <div className="w-2/3 flex justify-center items-center mt-10 text-4xl font-bold pb-10 ">
             <input
               type="text"
@@ -136,9 +96,16 @@ export default function Home() {
                         scale: 1.05,
                       }}
                       onClick={() => {
+                        // searchWiki()
+                        router.push({
+                          pathname: "/info",
+                          query: { name: search?.drinks[0].strDrink },
+                        });
+
+                        // router.push(search?.drinks[0].strDrink);
                         // setModalMovie(search);
                         // openModal();
-                        setSearch(search?.drinks[0].strDrink);
+                        // setSearch(search?.drinks[0].strDrink);
                         // searchWiki(0, "Clicked");
                       }}
                     >
@@ -154,7 +121,9 @@ export default function Home() {
                       <div className="h-[64px] w-full flex flex-col justify-around items-center text-white text-center ">
                         <div className="flex flex-col justify-center items-center">
                           <p>{search?.drinks[0].strDrink}</p>
-                          <p style={{fontSize: 12}}>- {search?.drinks[0].strAlcoholic} -</p>
+                          <p style={{ fontSize: 12 }}>
+                            - {search?.drinks[0].strAlcoholic} -
+                          </p>
                         </div>
                       </div>
                     </motion.div>
