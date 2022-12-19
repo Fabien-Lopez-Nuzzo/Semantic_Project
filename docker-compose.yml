@@ -1,0 +1,9 @@
+version: '3'
+services:
+  semantic_next:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: semantic_web
+    ports:
+      - "10000:3000"
