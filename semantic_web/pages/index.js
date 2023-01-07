@@ -33,7 +33,6 @@ export default function Home() {
 
   const searchWiki = async (e, s = "") => {
     if (e.key == "Enter" || e.keycode == 13 || s != "") {
-      console.log("bing chilling! \'" + search + "\'")
       let res = await axios.get("https://www.thecocktaildb.com/api/json/v1/1/search.php?s=" + search);
       if (res.data.drinks)
         router.push({ pathname: "/info", query: { name: search } });
@@ -95,7 +94,7 @@ export default function Home() {
           <div className="w-2/3 flex justify-center items-center mt-10 text-4xl font-bold ">
             <input
               type="text" placeholder="Search a cocktail" value={search}
-              className="w-full rounded-xl text-center"
+              className="w-full rounded-xl text-center" style={{height: "48px"}}
               onChange={(e) => setSearch(e.target.value)} onKeyUp={(e) => searchWiki(e)}
             />
           </div>

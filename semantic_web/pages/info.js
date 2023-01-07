@@ -4,17 +4,20 @@ import Router from "next/router";
 import { useState, useEffect } from "react";
 import fetch from "node-fetch";
 import axios from "axios";
+
 const WBK = require("wikibase-sdk");
 const wbk = WBK({
   instance: "https://www.wikidata.org",
   sparqlEndpoint: "https://query.my-wikibase-instan.se/sparql", // Required to use `sparqlQuery` and `getReverseClaims` functions, optional otherwise
 });
 
-function capitalizeFirstLetter(string) { return string[0] && string[0].toUpperCase() + string.slice(1);}
+// function capitalizeFirstLetter(string)   { return string[0] && string[0].toUpperCase() + string.slice(1);}
+// function uncapitalizeFirstLetter(string) { return string[0] && string[0].toLowerCase() + string.slice(1);}
 
 export default function Info() {
   const router = Router;
   const [data, setData] = useState(undefined);
+  const searchType = "cocktail";
   useEffect(() => {
     const getInfoCocktail = async () => {
       // console.log(router?.query?.name);
@@ -65,13 +68,12 @@ export default function Info() {
     getInfoCocktail();
   }, []);
 
-  // function drawQuantity(measure) {
-  //   return item["strMeasure" + i] != undefined ? capitalizeFirstLetter(item["strMeasure" + i].trim())
-  // }
   const getIngredients = (item) => {
     let ingredients = [];
     for (let i = 1; i <= 15 && item["strIngredient" + i] != null; i++)
-      ingredients.push({"name": item["strIngredient" + i], "quantity": item["strMeasure" + i] != undefined ? capitalizeFirstLetter(item["strMeasure" + i].trim()) : "unspecified"});
+      ingredients.push({"name": item["strIngredient" + i], "quantity": item["strMeasure" + i] != undefined
+                        ? item["strMeasure" + i].trim()
+                        : "unspecified"});
     return ingredients;
   };
 
@@ -79,24 +81,53 @@ export default function Info() {
     <div className="h-full min-h-screen w-full" style={{backgroundColor: "#FEE369"}}>
       <div className="w-full items-center flex flex-col">
         <center><Image src={logo} alt="wimc logo" style={{marginTop: "1rem"}} /></center>
-        {/* <hr style={{color: "#000000"}} /> */}
-        <div className="w-9/10 h-9/10 justify-center items-center">
+        <div className="justify-center items-center" style={{minWidth: "64%"}}>
           <hr />
-          {data != undefined &&
-            data["data"]["drinks"]?.map((item, _idx) => {
+          { data != undefined &&
+            data["data"]["drinks"]?.map((item, _idxD) => {
               return (
                 <>
                   <h1 style={{fontWeight: "bold", fontSize: "36px"}}>{item["strDrink"]}</h1>
-                  <h2 style={{fontWeight: "bold", fontSize: "20px", marginTop: "5px"}}>Ingredients:</h2>
-                  <div className="ingredients">
-                    { getIngredients(item) != undefined &&
-                      getIngredients(item)?.map((ingred, _idx) => {
-                        return (
-                            <p>{ingred["name"]} <i>({ingred["quantity"]})</i></p>
-                        );
-                      })
+                  <div className="property pinstanceof"> {/* TODO */}
+                    <h2 className="property--header">instance of</h2>
+                    { searchType == "cocktail"
+                      ? <p className="padded">cocktail</p>
+                      : <p className="padded">ingredient</p>
                     }
                   </div>
+                  <div className="property pimage">
+                    <h2 className="property--header">image</h2>
+                      <center><Image style={{maxWidth: "250px", maxHeight: "250px", marginBottom:"4px"}}
+                        src={item.strDrinkThumb} alt="cocktail image"
+                      /></center>
+                  </div>
+                  <div className="property pingredients">
+                    <h2 className="property--header">ingredients</h2>
+                    <div className="ingredients padded">
+                      { getIngredients(item) != undefined &&
+                        getIngredients(item)?.map((ingred, _idxI) => {
+                          return (
+                              <p>{ingred["name"].toLowerCase()}
+                                  { ingred["quantity"] != "unspecified"
+                                    ? <><br/>&emsp;<i>{'quantity'}</i>&emsp;&emsp;{ingred["quantity"].toLowerCase()}</>
+                                    : <></>
+                                  }
+                              </p>
+                          );
+                        })
+                      }
+                    </div>
+                  </div>
+                  { _idxD == 0
+                    ? <div className="property pvarianttype">
+                        <h2 className="property--header">variant type</h2>
+                        <p className="padded">main variant</p>
+                      </div>
+                    : <div className="property pvarianttype">
+                        <h2 className="property--header">variant type</h2>
+                        <p className="padded">derivation</p>
+                      </div>
+                  }
                   <hr />
                 </>
               );
