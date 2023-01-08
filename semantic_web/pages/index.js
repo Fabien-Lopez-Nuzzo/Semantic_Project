@@ -74,18 +74,18 @@ export default function Home() {
         <div className="w-full flex flex-col items-center">
           <Image src={logo} alt="wimc logo" style={{ marginTop: "1rem" }} />
           <hr style={{ color: "#000000" }} />
-          <div className="w-2/3 flex justify-center items-center mt-10 text-4xl font-bold pb-10 ">
+          <div className="w-2/3 flex justify-center items-center text-4xl font-bold" style={{marginTop: "8px"}}>
             <input
               type="text"
               placeholder="Search a cocktail"
-              className="w-full rounded-xl text-center"
+              className="w-full rounded-xl text-center" style={{height: "48px"}}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               onKeyUp={(e) => searchWiki(e)}
             />
           </div>
-          <div className="w-9/10 h-[550px] flex justify-center items-center my-10">
-            <div className="grid grid-cols-4 mt-10 gap-8 justify-around mb-10">
+          <div className="w-9/10 h-[550px] flex justify-center items-center my-10" style={{maxHeight: "480px"}}>
+            <div className="grid grid-cols-4 justify-around" style={{gap: "4px 32px"}}>
               {cocktailSearch &&
                 cocktailSearch?.map((search, index) => {
                   return (

@@ -100,23 +100,22 @@ export default function Info() {
       const based = await fetch("api/hello?params=" + basedId);
       const country = await fetch("api/hello?params=" + countryId);
 
-      const data = await instance.json();
+      const data1 = await instance.json();
       const data2 = await subclass.json();
       const data3 = await based.json();
       const data4 = await country.json();
       setInstanceOf(
-        instanceId ? data?.entities[instanceId].labels.en.value : "None"
+        instanceId ? data1?.entities[instanceId].labels.en.value : "-"
       );
       setSubclassOf(
-        subclassId ? data2?.entities[subclassId].labels.en.value : "None"
+        subclassId ? data2?.entities[subclassId].labels.en.value : "-"
       );
-      setInceptionOf(inceptionTime ? inceptionTime.slice(1, 5) : "None");
-      setBasedOn(basedId ? data3?.entities[basedId].labels.en.value : "None");
+      setInceptionOf(inceptionTime ? inceptionTime.slice(1, 5) : "-");
+      setBasedOn(basedId ? data3?.entities[basedId].labels.en.value : "-");
       setCountryOrigin(
-        countryId ? data4?.entities[countryId].labels.en.value : "None"
+        countryId ? data4?.entities[countryId].labels.en.value : "-"
       );
-      setCommunCategory(commun ? commun : "None");
-      // console.log(data3);
+      setCommunCategory(commun ? commun : "-");
     };
     getInfoEntities();
   }, [cocktailInfo]);
@@ -125,9 +124,9 @@ export default function Info() {
     <div className="bg-slate-800 h-auto min-h-screen w-full flex justify-start flex-col items-center text-white">
       <div className="w-3/4 h-[300px] flex justify-center items-center bg-gray-500 my-5 flex-row rounded-xl">
         <div className="w-1/2 h-full flex flex-col justify-center items-center">
-          <Image src={cocktail?.strDrinkThumb} height="250" width="175" />
-          <p>{cocktail?.strDrink}</p>
-          <p>{cocktail?.strAlcoholic} Drink</p>
+          <Image src={cocktail?.strDrinkThumb} height="200" width="200" />
+          <p style={{fontWeight: "700", fontSize: "24px"}}>{cocktail?.strDrink}</p>
+          <p>{cocktail?.strAlcoholic} drink</p>
         </div>
         <div className="w-1/2 h-full flex flex-col justify-center space-y-20">
           <div>
@@ -152,7 +151,7 @@ export default function Info() {
             <p>{subclassOf}</p>
           </div>
           <div className="bg-gray-500 w-1/2 flex justify-center items-center flex-col h-[75px] rounded-xl">
-            <p className="text-lg underline">Inception</p>
+            <p className="text-lg underline">Date of inception</p>
             <p>{inceptionOf}</p>
           </div>
           <div className="bg-gray-500 w-1/2 flex justify-center items-center flex-col h-[75px] rounded-xl">
@@ -160,11 +159,11 @@ export default function Info() {
             <p>{basedOn}</p>
           </div>
           <div className="bg-gray-500 w-1/2 flex justify-center items-center flex-col h-[75px] rounded-xl">
-            <p className="text-lg underline">Country of origin</p>
-            <p>{countryOrigin}</p>
+            <p className="text-lg underline">Region of origin</p>
+            <center><p>{countryOrigin}</p></center>
           </div>
           <div className="bg-gray-500 w-1/2 flex justify-center items-center flex-col h-[75px] rounded-xl">
-            <p className="text-lg underline">Commun category</p>
+            <p className="text-lg underline">Common category</p>
             <p>{communCategory}</p>
           </div>
         </div>
