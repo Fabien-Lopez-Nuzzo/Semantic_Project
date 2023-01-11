@@ -46,10 +46,9 @@ export default function Home() {
         let randomDrinks = await axios.get(
           "https://www.thecocktaildb.com/api/json/v1/1/random.php"
         );
-        tmp.push(randomDrinks?.data);
+        tmp.push(randomDrinks?.data?.drinks[0])
       }
       setCocktailSearch(tmp);
-      // console.log(tmp);
     };
     getAllDrinks();
     getRandomDrinks();
@@ -64,7 +63,12 @@ export default function Home() {
       if (idx != -1) {
         router.push({ pathname: "/info", query: { name: allDrinks[idx][1] } });
       } else {
-        notifyError("This cocktail does not exist");
+        let res = await axios.get("https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=" + search)
+        if (res.data.drinks != undefined) {
+          setCocktailSearch(res.data.drinks);
+        } else {
+          notifyError("This cocktail or ingredient does not exist");
+        }
       }
     }
   };
@@ -84,8 +88,8 @@ export default function Home() {
               onKeyUp={(e) => searchWiki(e)}
             />
           </div>
-          <div className="w-9/10 h-[550px] flex justify-center items-center my-10" style={{maxHeight: "480px"}}>
-            <div className="grid grid-cols-4 justify-around" style={{gap: "4px 32px"}}>
+          <div className="w-9/10 flex justify-center items-start my-10">
+            <div className="grid grid-cols-4 justify-around" style={{gap: "16px 32px"}}>
               {cocktailSearch &&
                 cocktailSearch?.map((search, index) => {
                   return (
@@ -99,7 +103,7 @@ export default function Home() {
                         // searchWiki()
                         router.push({
                           pathname: "/info",
-                          query: { name: search?.drinks[0].strDrink },
+                          query: { name: search?.strDrink },
                         });
 
                         // router.push(search?.drinks[0].strDrink);
@@ -111,7 +115,7 @@ export default function Home() {
                     >
                       <div className="h-[200px] w-full flex justify-center">
                         <Image
-                          src={search?.drinks[0].strDrinkThumb}
+                          src={search?.strDrinkThumb}
                           height="350"
                           width="175"
                           // quality="100"
@@ -120,9 +124,9 @@ export default function Home() {
                       </div>
                       <div className="h-[64px] w-full flex flex-col justify-around items-center text-white text-center ">
                         <div className="flex flex-col justify-center items-center">
-                          <p>{search?.drinks[0].strDrink}</p>
+                          <p>{search?.strDrink}</p>
                           <p style={{ fontSize: 12 }}>
-                            - {search?.drinks[0].strAlcoholic} -
+                            - {search?.strAlcoholic} -
                           </p>
                         </div>
                       </div>
